@@ -1,0 +1,13 @@
+{
+  "name": "exam-bank-app",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start:debug": "concurrently -n BACKEND,FRONTEND -c bgBlue.bold,bgGreen.bold \"npm run server\" \"npm run client\"",
+    "server": "cd backend && nodemon server.js",
+    "client": "cd frontend && npm run dev",
+    "clean-start": "rm -rf frontend/node_modules backend/node_modules && npm install && cd frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

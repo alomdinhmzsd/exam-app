@@ -1,0 +1,47 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:5003",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.1.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "axios": "^1.8.4",
+    "framer-motion": "^5.5.5",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "4.0.3",
+    "vite": "^6.3.5",
+    "web-vitals": "^2.1.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "resolutions": {
+    "framer-motion": {
+      "main": "dist/framer-motion.cjs.js"
+    }
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
+  }
+}
