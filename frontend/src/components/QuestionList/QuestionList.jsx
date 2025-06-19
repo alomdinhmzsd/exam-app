@@ -80,6 +80,20 @@ const QuestionList = ({ domainName = 'all' }) => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (questions.length > 0) {
+      const fuzzyMatch = questions.find(
+        (q) =>
+          q.question.toLowerCase().includes('biotechnology') &&
+          q.question.toLowerCase().includes('firm')
+      );
+      console.log(
+        "🔍 Closest match for 'biotechnology firm':",
+        fuzzyMatch || 'Not found'
+      );
+    }
+  }, [questions]);
+
   const getQuestionStats = (questionId) => {
     try {
       const savedAnswers =
@@ -120,15 +134,31 @@ const QuestionList = ({ domainName = 'all' }) => {
   const baseFiltered = filterQuestions(rangeFilteredQuestions, filters);
 
   const filteredQuestions = baseFiltered
-    .filter((q) => {
-      const questionSearch = filters.questionTextSearch.toLowerCase();
-      if (!questionSearch) return true;
-      return q.question.toLowerCase().startsWith(questionSearch);
+    .map((q) => {
+      const text = q.question.toLowerCase();
+      const search = filters.questionTextSearch.trim().toLowerCase();
+
+      if (!search) return { ...q, _matchRank: 0 };
+
+      // Clean punctuation (optional, improves robustness)
+      const clean = (s) => s.replace(/[^\w\s]/gi, '');
+
+      const cleanedText = clean(text);
+      const cleanedSearch = clean(search);
+
+      if (cleanedText === cleanedSearch) return { ...q, _matchRank: 0 };
+      if (cleanedText.startsWith(cleanedSearch)) return { ...q, _matchRank: 1 };
+      if (cleanedText.includes(cleanedSearch)) return { ...q, _matchRank: 2 };
+
+      const allWords = cleanedSearch.split(/\s+/);
+      const allMatch = allWords.every((word) => cleanedText.includes(word));
+      if (allMatch) return { ...q, _matchRank: 3 };
+
+      return null;
     })
-    .filter((q) => {
-      if (!hideMastered) return true;
-      return !getMasteryStatus(q.questionId);
-    });
+    .filter(Boolean)
+    .filter((q) => !hideMastered || !getMasteryStatus(q.questionId))
+    .sort((a, b) => a._matchRank - b._matchRank);
 
   const sortedQuestions = sortQuestions(filteredQuestions, filters.sortOrder);
   const groupedDomains = getGroupedDomains();
